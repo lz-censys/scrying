@@ -414,9 +414,7 @@ fn vnc_capture(
     ])?;
 
     let vnc_format = vnc.format();
-    if opts.move_mouse {
-        vnc.send_pointer_event(0, 0, 0)?;
-    }
+
     debug!(target, "VNC pixel format: {:?}", vnc_format);
 
     debug!(target, "requesting update");
@@ -430,6 +428,10 @@ fn vnc_capture(
         false,
     )?;
 
+    if opts.move_mouse {
+        info!(target, "Sending mouse event");
+        vnc.send_pointer_event(0, 0, 0)?;
+    }
 
     let mut vnc_image = Image::new(vnc_format, width, height)?;
 
