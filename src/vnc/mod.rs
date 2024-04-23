@@ -464,6 +464,11 @@ fn vnc_poll(
     loop {
         for event in vnc.poll_iter() {
             match event {
+                // Disconnected(Some(Io(Error { kind: UnexpectedEof, message: "failed to fill whole buffer" })))
+                Disconnected(Some(e)) => {
+                    warn!(target, "VNC Channel disconnected with error: {:?}", e);
+                    return Ok(());
+                }
                 Disconnected(None) => {
                     warn!(target, "VNC Channel disconnected");
                     return Ok(());
