@@ -91,6 +91,7 @@ pub struct Opts {
     pub verbose: u64,
     pub test_import: bool,
     pub disable_report: bool,
+    pub move_mouse: bool,
 }
 
 pub fn parse() -> Result<Opts> {
@@ -128,6 +129,11 @@ pub fn parse() -> Result<Opts> {
                 .default_value("10")
                 .long("conn-timeout")
                 .takes_value(true),
+        )
+        .arg(
+            Arg::new("MOVE MOUSE")
+                .help("Move the mouse cursor before taking a screenshot")
+                .long("move-mouse")
         )
         .arg(
             Arg::new("RDP TIMEOUT")
@@ -346,6 +352,7 @@ pub fn parse() -> Result<Opts> {
         mode: args.value_of_t("MODE").unwrap(),
         rdp_timeout: args.value_of_t("RDP TIMEOUT").unwrap(),
         conn_timeout: args.value_of_t("CONN TIMEOUT").unwrap(),
+        move_mouse: args.is_present("MOVE MOUSE"),
         threads: args.value_of_t("THREADS").unwrap(),
         log_file: args.value_of("LOG FILE").map(String::from),
         nmaps,
