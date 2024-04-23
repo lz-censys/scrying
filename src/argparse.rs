@@ -73,6 +73,7 @@ pub struct Opts {
     pub targets: Vec<String>,
     pub mode: Mode,
     pub rdp_timeout: usize,
+    pub conn_timeout: u64,
     pub threads: usize,
     pub log_file: Option<String>,
     pub nmaps: Vec<String>,
@@ -119,6 +120,13 @@ pub fn parse() -> Result<Opts> {
                 .long("mode")
                 .possible_values(["web", "rdp", "vnc", "auto"])
                 .short('m')
+                .takes_value(true),
+        )
+        .arg(
+            Arg::new("CONN TIMEOUT")
+                .help("Seconds to wait for a connection before timing out")
+                .default_value("10")
+                .long("conn-timeout")
                 .takes_value(true),
         )
         .arg(
@@ -337,6 +345,7 @@ pub fn parse() -> Result<Opts> {
         targets,
         mode: args.value_of_t("MODE").unwrap(),
         rdp_timeout: args.value_of_t("RDP TIMEOUT").unwrap(),
+        conn_timeout: args.value_of_t("CONN TIMEOUT").unwrap(),
         threads: args.value_of_t("THREADS").unwrap(),
         log_file: args.value_of("LOG FILE").map(String::from),
         nmaps,

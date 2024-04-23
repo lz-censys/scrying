@@ -289,11 +289,13 @@ fn capture_worker(
     // enum is used to get around type errors and the limitation that
     // trait objects can only have one main trait (i.e. "dyn Read +
     // Write") is not possible.
+
     let stream = if let Some(proxy) = &opts.rdp_proxy {
         debug!(target, "Connecting to Socks proxy");
         SocketType::Socks5(Socks5Stream::connect(proxy, *addr)?)
     } else {
-        SocketType::Tcp(TcpStream::connect(addr)?)
+        let duration = Duration::new(opts.conn_timeout, 0);
+        SocketType::Tcp(TcpStream::connect_timeout(addr, duration)?)
     };
 
     debug!(target, "RDP domain: {:?}", opts.rdp_domain);

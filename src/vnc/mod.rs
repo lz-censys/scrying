@@ -33,6 +33,7 @@ use std::convert::TryInto;
 use std::net::TcpStream;
 use std::path::Path;
 use std::sync::mpsc::Sender;
+use std::time::Duration;
 use vnc::client::{AuthChoice, AuthMethod, Client};
 use vnc::Colour;
 use vnc::{PixelFormat, Rect};
@@ -364,7 +365,9 @@ fn vnc_capture(
         }
     };
 
-    let stream = TcpStream::connect(addr)?;
+    // timeout after 5s
+    let duration = Duration::new(opts.conn_timeout, 0);
+    let stream = TcpStream::connect_timeout(addr, duration)?; 
 
     let mut vnc = Client::from_tcp_stream(stream, false, |methods| {
         debug!(target, "available auth methods: {:?}", methods);
