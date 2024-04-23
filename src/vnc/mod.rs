@@ -481,6 +481,11 @@ fn vnc_poll(
                     debug!(target, "End of frame");
                     return Ok(());
                 }
+                // SetCursor { size: (u16, u16), hotspot: (u16, u16), pixels: Vec<u8>, mask_bits: Vec<u8> }
+                SetCursor { .. } => {
+                    warn!(target, "Set cursor");
+                    return Ok(());
+                }
                 SetColourMap {
                     first_colour,
                     colours,
